@@ -5,7 +5,7 @@
 # Required: 
 #  -C++11
 
-echo "Comiling ./src/digitalwallte.cpp using c++11 compiler\n"
+echo "Comiling ./src/digitalwallet.cpp using c++11 compiler\n"
 rm *.o runcode
 g++ -std=c++11 -O3 -ftree-vectorize ./src/digitalwallet.cpp -o ./runcode 
 echo "Runnig code ...\n"
