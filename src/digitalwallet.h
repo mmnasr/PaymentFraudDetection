@@ -1,5 +1,5 @@
 #ifndef H_DIGITALWALLET
-#define H_MYMATH 
+#define H_DIGITALWALLET 
 
 const size_t NUMBER_OF_ALERT_FEATURES = 3;
 const size_t FEATURE_3_NTH_DEGREE_FRIEND = 5;
