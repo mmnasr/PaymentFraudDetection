@@ -36,3 +36,9 @@ Each line of output1.txt (using feature1) includes:
 
 ### For more information, check problem description [link](https://github.com/InsightDataScience/digital-wallet/blob/master/README.md).
 
+## Solution: 
+A graph is built based on batch-payments. Connectivity list is formed for users in the database. 
+For each incoming new transaction, the graph is checked based on connetivities. For feature 3 (5-degree separation), a modified [Breadth-First-Search](https://en.wikipedia.org/wiki/Breadth-first_search) algorithm is employed. Graph is then updaed dynamically to include the each new transaction. 
+
+Finally, the three flags for each transaction is stored into three output1.txt, output2.txt and output3.txt files. 
+
