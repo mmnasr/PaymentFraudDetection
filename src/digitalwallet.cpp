@@ -99,11 +99,11 @@ int main(int argc, char *argv[])
 
         /* flags: results on fraud alert features (see problem description) */
         /* Special case: user sending money to himself/herself. Set all flags to true (trusted) */
-        std::fill(current_trans_flags.begin(), current_trans_flags.end(), true);
         
         if ( isSendToSelf(trans) )
         {
             /* Set all the flags to true for current transaction */
+            std::fill(current_trans_flags.begin(), current_trans_flags.end(), true);
             flags.push_back(current_trans_flags);
             continue; /* go to next transaction */
         } /* if id_send == id_recv */
@@ -116,21 +116,24 @@ int main(int argc, char *argv[])
             g.addEdge(trans->id_send, trans->id_recv);
             continue; /* go to next transaction */
         } 
-        if (fraud_analyzer.isVerifiedFeature_1(trans)) {
-            flags.push_back(current_trans_flags);
-            g.addEdge(trans->id_send, trans->id_recv);
-            continue; /* go to next transaction */
+        bool flag1 = false; 
+        bool flag2 = false; 
+        bool flag3 = false; 
+        flag1 = fraud_analyzer.isVerifiedFeature_1(trans);
+        if (flag1) { 
+            flag2 = true; flag3 = true; 
+        } else {
+            flag2 = fraud_analyzer.isVerifiedFeature_2(trans);
+            if (flag2) { 
+                flag3 = true; 
+            } else {
+                flag3 = fraud_analyzer.isVerifiedFeature_3(trans);
+            }
         }
-        if (fraud_analyzer.isVerifiedFeature_2(trans)) {
-                
-            current_trans_flags[0] = false;
-            flags.push_back(current_trans_flags);
-            g.addEdge(trans->id_send, trans->id_recv);
-            continue;
-        }  /* else check for flag3 */
-        current_trans_flags[0] = false;
-        current_trans_flags[1] = false;
-        current_trans_flags[2] = fraud_analyzer.isVerifiedFeature_3(trans);
+        current_trans_flags[0] = flag1; 
+        current_trans_flags[1] = flag1; 
+        current_trans_flags[2] = flag1; 
+        flags.push_back(current_trans_flags);
         g.addEdge(trans->id_send, trans->id_recv);
         
         //printTransactionFraudFlag(trans, flag1, flag2, flag3) ;
