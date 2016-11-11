@@ -1,6 +1,6 @@
 # Payment Fraud Detection
-## Insight Data Program: Data Engineering Challenge
-## By: Mohamad Nasr-Azadani, Email: mmnasr@gmail.com
+### Insight Data Program: Data Engineering Challenge
+### By: Mohamad Nasr-Azadani, Email: mmnasr@gmail.com
 
 ## Requirements: 
 ### Code is prepared in C++ with OOP.
@@ -8,7 +8,7 @@
 
 ## General description and usage:
 
-<./EXEC_FILE>   <BATCH-PAYMENT_FILENAME> <STREAM-PAYMENT_FILENAME> <OUTPUT_FOLDER [default:./]>
+<./EXEC_FILE> \<BATCH-PAYMENT_FILENAME\> \<STREAM-PAYMENT_FILENAME\> \<OUTPUT_FOLDER [default:./]\>
 The code imports batch-payment file (BATCH-PAYMENT_FILENAME) and constructs a graph using the provided transaction amongst users.
 It then proceed to verify whether or not the incoming transactions (imported from STREAM-PAYMENT_FILENAME) can be flagged as 'untrusted' or 'verified'.
 
