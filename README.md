@@ -13,9 +13,9 @@ The code imports batch-payment file (BATCH-PAYMENT_FILENAME) and constructs a gr
 It then proceed to verify whether or not the incoming transactions (imported from STREAM-PAYMENT_FILENAME) can be flagged as 'untrusted' or 'verified'.
 
 #### Verification is evaluated given three features:
-1. feature 1: Users had a first-degree transaction(s): \"friends\". 
-2. feature 2: Users have a common friend with whom they had a previous transaction(s): \"friends of a friend\"  
-3. feature 3: Users are included in a 5th-degree \"friendship\" network: 
+1. feature 1: Users had a first-degree transaction(s): "friends". 
+2. feature 2: Users have a common friend with whom they had a previous transaction(s): "friends of a friend"  
+3. feature 3: Users are included in a 5th-degree "friendship" network: 
 
 
 #### Input files: \<BATCH-PAYMENT_FILENAME\> and \<STREAM-PAYMENT_FILENAME\>
