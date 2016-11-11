@@ -28,12 +28,6 @@ time, id1, id2, amount, message
 + amount: amount of money sent by sender (id1) to the receiver (id2) ($US)
 + message: message provided by sender (id1) at submission time 
 
-An example BATCH-PAYMENT_FILENAME or STREAM-PAYMENT_FILENAME file:
-
-time, id1, id2, amount, message
-2016-11-02 09:38:53, 52349, 8552, 37.10, Pitcher
-2016-11-02 09:38:54, 52345, 8550, 57.10, For stuff
-
 #### Output files: 
 Three output files: output1.txt, output2.txt, and output3.txt will be created in \<OUTPUT_FOLDER\>.
 If no \<OUTPUT_FOLDER\> is provided, current directory will be used.
