@@ -387,11 +387,11 @@ void writeFlags(std::string output_write_directory, std::vector<std::vector<bool
         {
             if (flags[i][feature-1])
             {
-                file << "verified\n";
+                file << "trusted\n";
             
             } else
             {
-                file << "untrusted\n";
+                file << "unverified\n";
             }
         } /* for */
         file.close();

@@ -4,7 +4,7 @@ const char HELP[] = "\n      ***************************************************
         <./EXEC_FILE>   <BATCH-PAYMENT_FILENAME> <STREAM-PAYMENT_FILENAME> <OUTPUT_FOLDER [default:./]>\n\n\
         The code imports batch-payment file (BATCH-PAYMENT_FILENAME) and constructs a graph using the provided transaction amongst users.\n\
         It then proceed to verify whether or not the incoming transactions (imported from STREAM-PAYMENT_FILENAME)\n\
-        can be flagged as 'untrusted' or 'verified'.\n\
+        can be flagged as 'trusted' or 'unverified'.\n\
         Verification is evaluated given three features: \n\
             - feature 1: Users had a first-degree transaction(s): \"friends\". \n\
             - feature 2: Users have a common friend with whom they had a previous transaction(s): \"friends of a friend\"  \n\
@@ -26,7 +26,7 @@ const char HELP[] = "\n      ***************************************************
             Three output files: output1.txt, output2.txt, and output3.txt will be created in <OUTPUT_FOLDER>.\n\
             If no <OUTPUT_FOLDER> is provided, current directory will be used.\n\
             Each line of output1.txt (using feature1) includes: \n\
-                `untrusted` or `verified` corresponding to transactions provided in <STREAM-PAYMENT_FILENAME>\n";
+                `trusted` or `unverified` corresponding to transactions provided in <STREAM-PAYMENT_FILENAME>\n";
 
 #include <iostream>
 #include <vector>
@@ -99,11 +99,11 @@ int main(int argc, char *argv[])
 
         /* flags: results on fraud alert features (see problem description) */
         /* Special case: user sending money to himself/herself. Set all flags to true (trusted) */
-        std::fill(current_trans_flags.begin(), current_trans_flags.end(), true);
         
         if ( isSendToSelf(trans) )
         {
             /* Set all the flags to true for current transaction */
+            std::fill(current_trans_flags.begin(), current_trans_flags.end(), true);
             flags.push_back(current_trans_flags);
             continue; /* go to next transaction */
         } /* if id_send == id_recv */
@@ -116,26 +116,26 @@ int main(int argc, char *argv[])
             g.addEdge(trans->id_send, trans->id_recv);
             continue; /* go to next transaction */
         } 
-        if (fraud_analyzer.isVerifiedFeature_1(trans)) {
-            flags.push_back(current_trans_flags);
-            g.addEdge(trans->id_send, trans->id_recv);
-            continue; /* go to next transaction */
+        bool flag1 = false; 
+        bool flag2 = false; 
+        bool flag3 = false; 
+        flag1 = fraud_analyzer.isVerifiedFeature_1(trans);
+        if (flag1) { 
+            flag2 = true; flag3 = true; 
+        } else {
+            flag2 = fraud_analyzer.isVerifiedFeature_2(trans);
+            if (flag2) { 
+                flag3 = true; 
+            } else {
+                flag3 = fraud_analyzer.isVerifiedFeature_3(trans);
+            }
         }
-        if (fraud_analyzer.isVerifiedFeature_2(trans)) {
-                
-            current_trans_flags[0] = false;
-            flags.push_back(current_trans_flags);
-            g.addEdge(trans->id_send, trans->id_recv);
-            continue;
-        }  
-        if (fraud_analyzer.isVerifiedFeature_3(trans)) {
-                
-            current_trans_flags[0] = false;
-            current_trans_flags[1] = false;
-            flags.push_back(current_trans_flags);
-            g.addEdge(trans->id_send, trans->id_recv);
-            continue;
-        }  
+        current_trans_flags[0] = flag1; 
+        current_trans_flags[1] = flag2; 
+        current_trans_flags[2] = flag3; 
+        flags.push_back(current_trans_flags);
+        g.addEdge(trans->id_send, trans->id_recv);
+        
         //printTransactionFraudFlag(trans, flag1, flag2, flag3) ;
     } /* for loop */ 
     profiler.addTimeStamp("Fraud alert streamed-payment analysis"); 

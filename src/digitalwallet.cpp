@@ -4,7 +4,7 @@ const char HELP[] = "\n      ***************************************************
         <./EXEC_FILE>   <BATCH-PAYMENT_FILENAME> <STREAM-PAYMENT_FILENAME> <OUTPUT_FOLDER [default:./]>\n\n\
         The code imports batch-payment file (BATCH-PAYMENT_FILENAME) and constructs a graph using the provided transaction amongst users.\n\
         It then proceed to verify whether or not the incoming transactions (imported from STREAM-PAYMENT_FILENAME)\n\
-        can be flagged as 'untrusted' or 'verified'.\n\
+        can be flagged as 'trusted' or 'unverified'.\n\
         Verification is evaluated given three features: \n\
             - feature 1: Users had a first-degree transaction(s): \"friends\". \n\
             - feature 2: Users have a common friend with whom they had a previous transaction(s): \"friends of a friend\"  \n\
@@ -26,7 +26,7 @@ const char HELP[] = "\n      ***************************************************
             Three output files: output1.txt, output2.txt, and output3.txt will be created in <OUTPUT_FOLDER>.\n\
             If no <OUTPUT_FOLDER> is provided, current directory will be used.\n\
             Each line of output1.txt (using feature1) includes: \n\
-                `untrusted` or `verified` corresponding to transactions provided in <STREAM-PAYMENT_FILENAME>\n";
+                `trusted` or `unverified` corresponding to transactions provided in <STREAM-PAYMENT_FILENAME>\n";
 
 #include <iostream>
 #include <vector>
@@ -131,8 +131,8 @@ int main(int argc, char *argv[])
             }
         }
         current_trans_flags[0] = flag1; 
-        current_trans_flags[1] = flag1; 
-        current_trans_flags[2] = flag1; 
+        current_trans_flags[1] = flag2; 
+        current_trans_flags[2] = flag3; 
         flags.push_back(current_trans_flags);
         g.addEdge(trans->id_send, trans->id_recv);
         
