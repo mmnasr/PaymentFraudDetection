@@ -34,6 +34,82 @@ struct Transactions {
 /*                                        Classes                                       */
 /****************************************************************************************/
 /****************************************************************************************/
+
+template<typename T>
+class myqueue {
+    std::vector<T> buffer;
+    size_t begin_, end_;
+
+public:
+    myqueue(size_t size = 0) : buffer(size) 
+    {
+        begin_ = end_ = 0;
+    }
+
+    T& front(void)
+    { 
+        return buffer[begin_]; 
+    }
+
+    void pop_front(void)
+    { 
+        if (begin_ < end_) {
+            begin_++; 
+        }
+    }
+
+    T& back(void)
+    { 
+        size_t idx = std::max<T>(0,end_-1);
+        return buffer[idx]; 
+    }
+    
+    void pop_back(void)
+    { 
+        if (end_ > begin_)
+        {
+            end_--;
+        } 
+    }
+
+    void push_back(const T& val) 
+    { 
+        buffer[end_++] = val; 
+    }
+
+    size_t size(void)
+    {
+        return (end_ - begin_);
+    }
+    void resize(size_t size, const T& val)
+    {
+        if (size >= buffer.size()) {
+            buffer.resize(2*size, val);
+        } 
+        end_ = size;
+    }
+    void reset(void) 
+    { 
+        begin_ = end_ = 0;
+    }
+    
+    bool empty(void)
+    {
+        return (end_ == begin_);
+    }
+
+    typedef T* iterator;
+    iterator begin() 
+    {
+        return &buffer[begin_];
+    }
+    iterator end()
+    {
+        return &buffer[end_];
+    }
+};
+
+
 /* Time profiler used in my code. */
 class TimeProfiler
 {
@@ -79,8 +155,10 @@ class Graph
     // friend in a given node's network.
     std::vector<bool> visited; /* to be used with BFS */
     std::vector<size_t> path_length; /* length of traveled path. To be used with BFS */
+    myqueue<size_t> bfs_queue;
     /* Level depth used in BFS search algorithm. 5 in this problem */
     size_t feature_3_nth_level;
+    
     
 public:
     Graph(size_t V);  // Constructor
@@ -97,7 +175,7 @@ public:
     void printGraph(void);
 };
  
-Graph::Graph(size_t V)
+Graph::Graph(size_t V) : bfs_queue(V)
 {
     this->V = V;
     adj.resize(V);
@@ -177,6 +255,7 @@ void Graph::resizeVectors(void) {
 
     visited.resize(this->V, false); 
     path_length.resize(this->V, 0); 
+    bfs_queue.resize(this->V, 0); 
 }
 
 void Graph::printNode(size_t v)
@@ -222,18 +301,18 @@ bool Graph::areNodesConnected_NthLevel(size_t v, size_t w)
     /* Set the traveled distance (from start point) to zero */
     std::fill(path_length.begin(), path_length.end(), 0);
  
-    // Create a queue for BFS
-    std::deque<size_t> queue;
- 
+    // reset bfs_queue. It won't re-allocate memory. Just resets the internal pointers. 
+    bfs_queue.reset(); 
+     
     // Mark the current node as visited and enqueue it
     visited[start] = true;
-    queue.push_back(start);
+    bfs_queue.push_back(start);
      
-    while(!queue.empty()) 
+    while(!bfs_queue.empty()) 
     {
         // Dequeue a vertex from queue and print it
-        start = queue.front();
-        queue.pop_front();
+        start = bfs_queue.front();
+        bfs_queue.pop_front();
         
         // Get all adjacent vertices of the dequeued vertex
         // If a adjacent has not been visited, then mark it as visited
@@ -253,7 +332,7 @@ bool Graph::areNodesConnected_NthLevel(size_t v, size_t w)
                     if (path_length[node] > this->feature_3_nth_level-1) {
                         return false;
                     }
-                    queue.push_back(node);
+                    bfs_queue.push_back(node);
                 }
             }
         } /* for */
